@@ -9,12 +9,8 @@ public class base {
     static int MAXIMO_TEMPO_EXECUCAO = 65535;
 
     static int n_processos = 3;  
-    int[] id = new int[n_processos];
-    
      
     public static void main(String[] args) {
-      
-     
 
      int[] tempo_execucao = new int[n_processos];
      int[] tempo_chegada = new int[n_processos];
@@ -62,6 +58,7 @@ public class base {
         else if (alg == 7) { //IMPRIME CONTEÚDO INICIAL DOS PROCESSOS
         	imprime_processos(tempo_execucao, tempo_espera, tempo_restante, tempo_chegada, prioridade);
         }
+
         else if (alg == 8) { //REATRIBUI VALORES INICIAIS
             popular_processos(tempo_execucao, tempo_espera, tempo_restante, tempo_chegada, prioridade);
             imprime_processos(tempo_execucao, tempo_espera, tempo_restante, tempo_chegada, prioridade);
@@ -103,8 +100,6 @@ public class base {
           }
     }
 
-    
-
     public static void imprime_processos(int[] tempo_execucao, int[] tempo_espera, int[] tempo_restante, int[] tempo_chegada,  int []prioridade){
         //Imprime lista de processos
       for (int i = 0; i < n_processos; i++) {
@@ -116,18 +111,44 @@ public class base {
         int[] tempo_espera = espera.clone();
         //Implementar o calculo e impressão de estatisticas
         
+        double tempo_espera_total = 0;
+        
+        for(int i=0; i<n_processos; i++){ 
+            System.out.println("Processo["+i+"]: tempo_espera="+tempo_espera[i]);
+            tempo_espera_total = tempo_espera_total + tempo_espera[i];
+        }
+
+        System.out.println("Tempo médio de espera: "+(tempo_espera_total/n_processos));
+        
     }
     
     public static void FCFS(int[] execucao, int[] espera, int[] restante, int[] chegada){
         int[] tempo_execucao = execucao.clone();
         int[] tempo_espera = espera.clone();
         int[] tempo_restante = restante.clone();
-        int[] tempo_chegada = chegada.clone();
+        //int[] tempo_chegada = chegada.clone();
+
+        int processo_em_execucao = 0; //processo inicial no FIFO é o zero
 
         //implementar código do FCFS
-        //...
+        for (int i=1; i<MAXIMO_TEMPO_EXECUCAO; i++) {
+            System.out.println("tempo["+i+"]: processo["+processo_em_execucao+"] restante="+tempo_restante[processo_em_execucao]);
+            
+            if (tempo_execucao[processo_em_execucao] == tempo_restante[processo_em_execucao])
+                tempo_espera[processo_em_execucao] = i-1;
+
+            if (tempo_restante[processo_em_execucao] == 1) {
+                if (processo_em_execucao == (n_processos-1))
+                    break;
+                else
+                    processo_em_execucao++;
+            }
+            else
+                tempo_restante[processo_em_execucao]--;
+            
+        }
         //
-        
+
         imprime_stats(tempo_espera);
     }
     
