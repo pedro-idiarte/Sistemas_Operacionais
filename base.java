@@ -157,13 +157,12 @@ public class base {
         int[] tempo_espera = espera.clone();
         int[] tempo_restante = restante.clone();
         int[] tempo_chegada = chegada.clone();
-        int[] ordem_processos = new int[n_processos]; // Array para armazenar a ordem dos processos
     
-        int tempo_atual = 0;
+        int tempo_atual = 1; // Começando a contagem de tempo em 1
         int processos_completos = 0;
     
         while (processos_completos < n_processos) {
-            int menor_tempo_execucao = MAXIMO_TEMPO_EXECUCAO; // Inicializa com um valor alto
+            int menor_tempo_execucao = Integer.MAX_VALUE;
             int processo_menor_tempo = -1;
     
             for (int i = 0; i < n_processos; i++) {
@@ -173,30 +172,22 @@ public class base {
                 }
             }
     
-            if (processo_menor_tempo != -1) {
-                ordem_processos[processos_completos] = processo_menor_tempo; // Registra o processo na ordem de execução
+            if (processo_menor_tempo == -1) {
+                System.out.println("\ntempo[" + tempo_atual + "]: nenhum processo está pronto");
+                tempo_atual++;
+                continue;
+            }
     
-                if (preemptivo) {
-                    tempo_restante[processo_menor_tempo]--;
+            // Execução do processo
+            tempo_restante[processo_menor_tempo]--;
+            System.out.println("\ntempo[" + tempo_atual + "]: processo[" + processo_menor_tempo + "] restante=" + tempo_restante[processo_menor_tempo]);
     
-                    if (tempo_restante[processo_menor_tempo] == 0) {
-                        processos_completos++;
-                        int tempo_espera_processo = tempo_atual - tempo_execucao[processo_menor_tempo] - tempo_chegada[processo_menor_tempo] + 1;
-                        tempo_espera[processo_menor_tempo] = tempo_espera_processo > 0 ? tempo_espera_processo : 0;
-                    }
-                } else {
-                    int tempo_execucao_processo = tempo_execucao[processo_menor_tempo];
-                    tempo_atual += tempo_execucao_processo;
-                    processos_completos++;
+            if (tempo_restante[processo_menor_tempo] == 0) {
+                processos_completos++;
     
-                    int tempo_espera_processo = tempo_atual - tempo_execucao_processo - tempo_chegada[processo_menor_tempo];
-                    tempo_espera[processo_menor_tempo] = tempo_espera_processo > 0 ? tempo_espera_processo : 0;
-    
-                    tempo_restante[processo_menor_tempo] = 0;
-                }
-    
-                // Impressão da ordem do processo
-                System.out.println("\ntempo[" + tempo_atual + "]: processo[" + processo_menor_tempo + "] restante=" + tempo_restante[processo_menor_tempo]);
+                // Calcula o tempo de espera para o processo concluído
+                int tempo_espera_processo = tempo_atual - tempo_execucao[processo_menor_tempo] + 1 - tempo_chegada[processo_menor_tempo];
+                tempo_espera[processo_menor_tempo] = tempo_espera_processo >= 0 ? tempo_espera_processo : 0;
             }
     
             tempo_atual++;
@@ -204,6 +195,7 @@ public class base {
     
         imprime_stats(tempo_espera);
     }
+    
     
     
     public static void PRIORIDADE(boolean preemptivo, int[] execucao, int[] espera, int[] restante, int[] chegada, int[] prioridade){
