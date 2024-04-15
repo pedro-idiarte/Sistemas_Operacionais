@@ -47,12 +47,12 @@ public class base {
                     popular_processos(tempo_execucao, tempo_espera, tempo_restante, tempo_chegada, prioridade);
                     imprime_processos(tempo_execucao, tempo_espera, tempo_restante, tempo_chegada, prioridade);
                 }
-                case 9 -> {
+                case 9 -> { System.out.println("\nPrograma Encerrado");
+                    System. exit(0);
                     break;
                 }
             }
         }
-
     }
 
     public static void list(int tempo, int processo, int[] restante) {
@@ -142,8 +142,6 @@ public class base {
                 tempo_restante[processo_em_execucao]--; // Decrementa o tempo restante do processo
  
         }
-        //
-
         imprime_stats(tempo_espera);
     }
 
@@ -329,6 +327,8 @@ public class base {
                 break;
             }
         }
+        
         imprime_stats(tempo_espera);
     }
+   
 }
