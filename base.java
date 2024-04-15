@@ -214,7 +214,6 @@ public class base {
         int maiorPrioridade = 0;
 
         // Ao invés de usar boolean, setar processoEmExecução para -1 enquanto nenhum
-        // processo chegar na fila de pronto
         int processoEmExecucao = -1;
 
         int concluidos = 0; // Contador de processos concluídos
