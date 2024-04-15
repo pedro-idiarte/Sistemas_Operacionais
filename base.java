@@ -117,26 +117,30 @@ public class base {
         int[] tempo_execucao = execucao.clone();
         int[] tempo_espera = espera.clone();
         int[] tempo_restante = restante.clone();
-        // int[] tempo_chegada = chegada.clone();
+        //int[] tempo_chegada = chegada.clone();
 
-        int processo_em_execucao = 0; // processo inicial no FIFO é o zero
+        int processo_em_execucao = 0; // Inicializa o índice do processo em execução como 0 (primeiro processo na fila)
 
-        // implementar código do FCFS
+        // Implementação do algoritmo FCFS (First-Come, First-Served)
         for (int i = 1; i < MAXIMO_TEMPO_EXECUCAO; i++) {
+            // Lista o tempo atual e o processo em execução
             System.out.println("tempo[" + i + "]: processo[" + processo_em_execucao + "] restante="
                     + tempo_restante[processo_em_execucao]);
 
+            // Verifica se é a primeira vez que o processo é executado para calcular o tempo de espera
             if (tempo_execucao[processo_em_execucao] == tempo_restante[processo_em_execucao])
                 tempo_espera[processo_em_execucao] = i - 1;
 
+            // Verifica se o tempo restante do processo é igual a 1 (último ciclo de execução)
             if (tempo_restante[processo_em_execucao] == 1) {
+                // Verifica se é o último processo na fila
                 if (processo_em_execucao == (n_processos - 1))
-                    break;
+                    break; // Sai do loop, pois todos os processos foram concluídos
                 else
-                    processo_em_execucao++;
+                    processo_em_execucao++; // Avança para o próximo processo na fila
             } else
-                tempo_restante[processo_em_execucao]--;
-
+                tempo_restante[processo_em_execucao]--; // Decrementa o tempo restante do processo
+ 
         }
         //
 
@@ -271,10 +275,60 @@ public class base {
         int[] tempo_espera = espera.clone();
         int[] tempo_restante = restante.clone();
 
-        // implementar código do Round-Robin
-        // ...
-        //
+        Scanner tc = new Scanner(System.in);
 
+        // Solicita ao usuário o tamanho da fatia de tempo (time slice)
+        System.out.println(" ");
+        System.out.println("Escolha o tamanho da Time Slice: ");
+        int timeslice = tc.nextInt();
+        System.out.println(" ");
+
+        int timesliceCount = 0; // Contador para controlar a fatia de tempo atual
+        int concluidos = 0; // Contador para acompanhar quantos processos foram concluídos
+
+        int processoEmExecucao = 0; // Índice do processo em execução
+        int tempo = 0; // Tempo atual
+
+        // Loop principal que simula a execução do algoritmo Round Robin
+        while(true){
+            tempo++; // Incrementa o tempo global
+            timesliceCount++; // Incrementa o contador da fatia de tempo atual
+            list(tempo, processoEmExecucao, tempo_restante); // Lista o tempo atual e o processo em execução
+
+            // Verifica se é o primeiro ciclo de execução do processo atual para calcular o tempo de espera
+            if(tempo_restante[processoEmExecucao] == tempo_execucao[processoEmExecucao]) {
+                tempo_espera[processoEmExecucao] = tempo;
+            }
+
+            // Verifica se o processo atual foi concluído
+            if(tempo_restante[processoEmExecucao] <= 0){
+                concluidos++;
+            }
+
+            // Verifica se o processo atual ainda tem tempo restante para execução
+            if(tempo_restante[processoEmExecucao] > 0){
+                tempo_restante[processoEmExecucao]--; // Decrementa o tempo restante do processo
+            }else{
+                processoEmExecucao++; // Avança para o próximo processo na fila
+                timesliceCount = 0; // Reinicia o contador da fatia de tempo atual
+            }
+
+            // Verifica se a fatia de tempo atual foi completada
+            if(timesliceCount >= timeslice){
+                processoEmExecucao++; // Avança para o próximo processo na fila
+                timesliceCount = 0; // Reinicia o contador da fatia de tempo atual
+            }
+
+            // Verifica se todos os processos foram percorridos e retorna ao início da fila
+            if(processoEmExecucao >= n_processos){
+                processoEmExecucao = 0; // Retorna ao início da fila
+            }
+
+            // Verifica se todos os processos foram concluídos e encerra o loop
+            if(concluidos == n_processos){
+                break;
+            }
+        }
         imprime_stats(tempo_espera);
     }
 }
