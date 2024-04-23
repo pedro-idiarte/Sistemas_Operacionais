@@ -18,3 +18,9 @@ Considerando isso, aqui está o passo a passo:
 2=SJF Preemptivo
 
 3=SJF Não Preemptivo
+
+4=Prioridade Preemptivo
+
+5=Prioridade Não-Preemptivo
+
+6=Round Robin
